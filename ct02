@@ -1,0 +1,30 @@
+#!/usr/bin/python3
+
+import curses as cs
+
+stdscr=''
+
+def init():
+    global stdscr
+    stdscr=cs.initscr()
+    cs.noecho()
+    cs.cbreak()
+    stdscr.keypad(True)
+
+def main():
+    global stdscr
+    init()
+    stdscr.addstr(10, 20, '-')
+    stdscr.refresh()
+    c = stdscr.getkey()
+    while c != 'e':
+        stdscr.addstr(10, 20, c)
+        stdscr.refresh()
+        c = stdscr.getkey()
+    cs.endwin()
+
+try:
+    main()
+except:
+    cs.endwin()
+

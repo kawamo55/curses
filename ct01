@@ -1,0 +1,35 @@
+#!/usr/bin/python3
+
+import curses as cs
+
+stdscr=''
+
+def init():
+    global stdscr
+    stdscr=cs.initscr()
+    cs.noecho()
+    cs.cbreak()
+    stdscr.keypad(True)
+
+def main():
+    init()
+    stdscr.addstr(10, 20, '-')
+    stdscr.refresh()
+    stdscr.getkey()
+    cs.echo()
+    s = stdscr.getstr(11, 20, 10)
+    cs.noecho()
+    stdscr.refresh()
+    stdscr.addstr(10, 20, s)
+    stdscr.refresh()
+    stdscr.addstr(11, 20, 'push any key')
+    stdscr.refresh()
+    stdscr.getkey()
+    cs.endwin()
+
+try:
+    main()
+except:
+    cs.endwin()
+
+
