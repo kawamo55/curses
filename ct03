@@ -1,0 +1,118 @@
+#!/usr/bin/python3
+
+import time as tm
+from curlib import lcurs
+
+cl=None
+#
+# --------- Menu Data --------
+mbas = ['+----------------------------------------+',
+        '|                                        |',
+        '|                                        |',
+        '|                                        |',
+        '|                                        |',
+        '|                                        |',
+        '|                                        |',
+        '+----------------------------------------+',
+        '| メニュー番号を押してください[  ]       |',
+        '+----------------------------------------+']
+mbasX=31
+mbasY=8
+numkeys=(b'1',b'2',b'3',b'4',b'5',b'6',b'7',b'8',b'9')
+#
+# -------- Window and Pad ---------
+wbas = ['+------------------------------------------------------------+',
+        '|                                                            |',
+        '|                                                            |',
+        '|                                                            |',
+        '|                                                            |',
+        '|                                                            |',
+        '|                                                            |',
+        '|                                                            |',
+        '|                                                            |',
+        '+------------------------------------------------------------+']
+#
+def dspWindow():
+    my=len(wbas)+1
+    mx=len(wbas[0])
+    win0=cl.addNewWin('wind01',25,4,mx,my)
+    cl.setDefault(win0)
+    cl.setTextatr(None)
+    ly=0
+    for l in wbas:
+        cl.dspString(0,ly,l)
+        ly+=1
+    cl.refresh()
+    win1=cl.addNewWin('wind02',26,5,mx-2,my-3)
+    pad=cl.addNewPad('pad01',100,50)
+    cl.setDefault(pad)
+    for i in range(3,40):
+        cl.dspString(i % 10,i,"Test ------------> {}".format(i))
+    cl.padRefresh('wind02',pad,0,0)
+    tm.sleep(2)
+    cl.padRefresh('wind02',pad,0,1)
+    tm.sleep(2)
+    cl.padRefresh('wind02',pad,0,2)
+    tm.sleep(2)
+    cl.padRefresh('wind02',pad,1,2)
+    tm.sleep(2)
+    cl.padRefresh('wind02',pad,2,2)
+    tm.sleep(2)
+    cl.setDefault(win0)
+    cl.clearWindow()
+    cl.refresh()
+
+#  Menu Callback
+def testmenu():
+    dspWindow()
+#
+def endProg():
+    cl.edwin()
+    exit()
+
+menu1=[['１．テストメニュー',testmenu],
+       ['２．プログラム終了',endProg]
+    ]
+
+#
+def dspMenu(win, menu,mbX,mbY):
+    cl.setDefault(win)
+    cl.setTextatr(cl.color1)
+    ly=1
+    for m in menu:
+        cl.dspString(2,ly,m[0])
+        ly+=1
+    cl.refresh()
+    mn=cl.getString(mbX,mbY,2)
+    if len(mn)>0 and mn in numkeys:
+        n=int(mn)-1
+        if len(mn)>=n:
+            menu[n][1]()
+    cl.refresh()
+#
+def makeMenuBase(menu):
+    my=len(mbas)+1
+    mx=len(mbas[0])
+    win=cl.addNewWin('menu01',20,2,mx,my)
+    cl.setDefault(win)
+    cl.setTextatr(cl.color1)
+    ly=0
+    for l in mbas:
+        cl.dspString(0,ly,l)
+        ly+=1
+    cl.refresh()
+    dspMenu(win,menu,mbasX,mbasY)
+    cl.clearWindow()
+    cl.resetDefault()
+#
+
+def main():
+    global cl,menu1
+    cl=lcurs()
+    cl.refresh()
+    while True:
+        makeMenuBase(menu1)
+    cl.edwin()
+
+if __name__=='__main__':
+    main()
